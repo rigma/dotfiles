@@ -5,3 +5,5 @@ require 'bootstrap'
 require 'plugins'
 
 require('lsp')
+require('autocomplete')
+
