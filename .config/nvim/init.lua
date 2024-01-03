@@ -4,6 +4,9 @@ vim.g.maplocalleader = ' '
 require 'bootstrap'
 require 'plugins'
 
+require 'keymap'
+require 'options'
+
 require 'code-search'
 require 'language-parser'
 
