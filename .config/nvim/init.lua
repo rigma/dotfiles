@@ -3,3 +3,5 @@ vim.g.maplocalleader = ' '
 
 require 'bootstrap'
 require 'plugins'
+
+require('lsp')
