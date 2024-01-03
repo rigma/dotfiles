@@ -4,6 +4,8 @@ vim.g.maplocalleader = ' '
 require 'bootstrap'
 require 'plugins'
 
-require('lsp')
-require('autocomplete')
+require 'code-search'
+
+require 'lsp'
+require 'autocomplete'
 
