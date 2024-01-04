@@ -55,7 +55,12 @@ require('mason-lspconfig').setup()
 
 -- Automatically installed LSP
 local servers = {
+  bashls = {},
   clangd = {},
+  cssls = {},
+  html = { filetypes = { 'html' } },
+  gopls = {},
+  jsonls = {},
   ltex = {},
   lua_ls = {
     Lua = {
@@ -64,10 +69,13 @@ local servers = {
       workspace = { checkThirdParty = false },
     },
   },
+  marksman = {},
   pyright = {},
   rust_analyzer = {},
+  taplo = {},
+  terraformls = {},
   tsserver = {},
-  html = { filetypes = { 'html' } },
+  yamlls = {},
 }
 
 -- Setup neovim Lua configuration
