@@ -1,7 +1,3 @@
-local function nmap(keys, action, opts)
-  vim.keymap.set('n', keys, action, opts)
-end
-
 return {
   'mfussenegger/nvim-dap',
   dependencies = {
@@ -14,6 +10,10 @@ return {
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+
+    local function nmap(keys, action, opts)
+      vim.keymap.set('n', keys, action, opts)
+    end
 
     require('mason-nvim-dap').setup {
       automatic_setup = true,

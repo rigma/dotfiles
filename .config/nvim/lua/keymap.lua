@@ -17,10 +17,9 @@ local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = t
 vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
   group = highlight_group,
-  callback = function ()
+  callback = function()
     vim.highlight.on_yank()
   end,
 })
 
 -- vim: ts=2 sts=2 sw=2 et
-

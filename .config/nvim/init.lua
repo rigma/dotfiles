@@ -2,14 +2,9 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require 'bootstrap'
-require 'plugins'
+require('lazy').setup('plugins')
 
 require 'keymap'
 require 'options'
 
-require 'code-search'
-require 'language-parser'
-
-require 'lsp'
-require 'autocomplete'
-
+-- vim: ts=2 sts=2 sw=2 et
