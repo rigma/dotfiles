@@ -15,11 +15,59 @@ require('lazy').setup({
       'williamboman/mason-lspconfig.nvim',
 
       -- Status update
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional Lua config for *awesome* stuff! (I've been told to install it 🤷)
       'folke/neodev.nvim',
     },
+    config = function()
+      local _augroups = {}
+      local autoformatting_enabled = true
+
+      local get_augroup = function(client)
+        if not _augroups[client.id] then
+          _augroups[client.id] = vim.api.nvim_create_augroup('autoformatting-lsp-format-' .. client.name,
+            { clear = true })
+        end
+
+        return _augroups[client.id]
+      end
+
+      vim.api.nvim_create_user_command('AutoformatToggle', function()
+        autoformatting_enabled = not autoformatting_enabled
+        if autoformatting_enabled then
+          print('Autoformatting: On')
+        else
+          print('Autoformatting: Off')
+        end
+      end, {})
+      vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('autoformatting-lsp-attach', { clear = true }),
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if not client.server_capabilities.documentFormattingProvider or client.name == 'tsserver' then
+            return
+          end
+
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            group = get_augroup(client),
+            buffer = args.buf,
+            callback = function()
+              if not autoformatting_enabled then
+                return
+              end
+
+              vim.lsp.buf.format {
+                async = false,
+                filter = function(c)
+                  return c.id == client.id
+                end,
+              }
+            end
+          })
+        end,
+      })
+    end,
   },
 
   -- Autocompletion
@@ -35,7 +83,7 @@ require('lazy').setup({
   },
 
   -- Which key is doing what? I'm lost in my config…
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',                opts = {} },
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -165,4 +213,3 @@ require('lazy').setup({
 })
 
 -- vim: ts=2 sts=2 sw=2 et
-
