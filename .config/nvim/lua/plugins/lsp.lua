@@ -15,14 +15,6 @@ return {
     local _augroups = {}
     local autoformatting_enabled = true
 
-    local nmap = function(keys, func, desc)
-      if desc then
-        desc = 'LSP: ' .. desc
-      end
-
-      vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-    end
-
     local get_augroup = function(client)
       if not _augroups[client.id] then
         _augroups[client.id] = vim.api.nvim_create_augroup('autoformatting-lsp-format-' .. client.name,
@@ -33,6 +25,14 @@ return {
     end
 
     local on_attach = function(_, bufnr)
+      local nmap = function(keys, func, desc)
+        if desc then
+          desc = 'LSP: ' .. desc
+        end
+
+        vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+      end
+
       nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
       nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
@@ -96,7 +96,11 @@ return {
         },
       },
       marksman = {},
-      pyright = {},
+      pyright = {
+        pyright = {
+          disableOrganizeImports = true,
+        },
+      },
       rust_analyzer = {},
       taplo = {},
       terraformls = {},
@@ -124,6 +128,24 @@ return {
           filetypes = (servers[server_name] or {}).filetypes,
           on_attach = on_attach,
           settings = servers[server_name],
+        }
+      end,
+      ['pyright'] = function()
+        require('lspconfig')['pyright'].setup {
+          capabilities = capabilities,
+          filetypes = (servers['pyright'] or {}).filetypes,
+          on_attach = function(_, bufnr)
+            on_attach(_, bufnr)
+
+            local dap_python = require('dap-python')
+            vim.keymap.set('n', '<leader>Pdm', dap_python.test_method,
+              { buffer = bufnr, desc = '[P]ython: [D]ebug test [m]ethod' })
+            vim.keymap.set('n', '<leader>Pdc', dap_python.test_class,
+              { buffer = bufnr, desc = '[P]ython: [D]ebug test [c]lass' })
+            vim.keymap.set('n', '<leader>Pds', dap_python.debug_selection,
+              { buffer = bufnr, desc = '[P]ython: [D]ebug [s]election' })
+          end,
+          settings = servers['pyright'],
         }
       end
     }
